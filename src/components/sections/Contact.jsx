@@ -12,23 +12,15 @@ export const Contact = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Debugging: Check if environment variables are loaded
     console.log("Service ID:", import.meta.env.VITE_SERVICE_ID);
     console.log("Template ID:", import.meta.env.VITE_TEMPLATE_ID);
     console.log("Public Key:", import.meta.env.VITE_PUBLIC_KEY);
 
-    // Ensure form data matches the EmailJS template fields
-    const templateParams = {
-      from_name: formData.name,
-      from_email: formData.email, // Optional if your template uses `email`
-      message: formData.message,
-    };
-
     emailjs
-      .send(
+      .sendForm(
         import.meta.env.VITE_SERVICE_ID,
         import.meta.env.VITE_TEMPLATE_ID,
-        templateParams,
+        e.target,  
         import.meta.env.VITE_PUBLIC_KEY
       )
       .then(() => {
@@ -36,8 +28,8 @@ export const Contact = () => {
         setFormData({ name: "", email: "", message: "" });
       })
       .catch((error) => {
-        console.error("Error:", error);
-        alert("Oops! Something went wrong. Please try again");
+        console.error("EmailJS Error:", error);
+        alert("Oops! Something went wrong. Please try again.");
       });
   };
 
@@ -53,7 +45,7 @@ export const Contact = () => {
               <input
                 type="text"
                 id="name"
-                name="name"
+                name="from_name"
                 value={formData.name}
                 required
                 className="w-full bg-white/5 border border-white/10 rounded px-4 py-3 text-white transition focus:outline-none focus:border-blue-500 focus:bg-blue-500/5"
