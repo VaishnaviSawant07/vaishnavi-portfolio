@@ -15,13 +15,20 @@ export const Contact = () => {
     console.log("Service ID:", import.meta.env.VITE_SERVICE_ID);
     console.log("Template ID:", import.meta.env.VITE_TEMPLATE_ID);
     console.log("Public Key:", import.meta.env.VITE_PUBLIC_KEY);
-    console.log("Form Data:", formData); // Debugging
+    console.log("Form Data:", formData); 
+
+    const emailData = {
+        from_name: formData.from_name,
+        from_email: formData.email, 
+        message: formData.message,
+        reply_to: formData.email, 
+      };
 
     emailjs
       .send(
         import.meta.env.VITE_SERVICE_ID,
         import.meta.env.VITE_TEMPLATE_ID,
-        formData, // ✅ Using state directly instead of accessing `e.target`
+        emailData, 
         import.meta.env.VITE_PUBLIC_KEY
       )
       .then(() => {
