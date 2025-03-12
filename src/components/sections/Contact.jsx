@@ -1,38 +1,48 @@
 import { RevealOnScroll } from "./RevealOnScroll";
 import { useState } from "react";
-import emailjs from 'emailjs-com'
+import emailjs from "emailjs-com";
 
 export const Contact = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
 
-    const [formData, setFormData] = useState({
-        name:"",
-        email:"",
-        message:""
-    })
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+    // Debugging: Check if environment variables are loaded
+    console.log("Service ID:", import.meta.env.VITE_SERVICE_ID);
+    console.log("Template ID:", import.meta.env.VITE_TEMPLATE_ID);
+    console.log("Public Key:", import.meta.env.VITE_PUBLIC_KEY);
 
-        emailjs
-      .sendForm(
-        String(import.meta.env.VITE_SERVICE_ID),
-        String(import.meta.env.VITE_TEMPLATE_ID),
-        e.target,
-        String(import.meta.env.VITE_PUBLIC_KEY)
+    // Ensure form data matches the EmailJS template fields
+    const templateParams = {
+      from_name: formData.name,
+      from_email: formData.email, // Optional if your template uses `email`
+      message: formData.message,
+    };
+
+    emailjs
+      .send(
+        import.meta.env.VITE_SERVICE_ID,
+        import.meta.env.VITE_TEMPLATE_ID,
+        templateParams,
+        import.meta.env.VITE_PUBLIC_KEY
       )
       .then(() => {
         alert("Message Sent!");
         setFormData({ name: "", email: "", message: "" });
       })
-      .catch(() => alert("Oops! Something went wrong. Please try again"));
+      .catch((error) => {
+        console.error("Error:", error);
+        alert("Oops! Something went wrong. Please try again");
+      });
   };
 
-
-    return (
-    <section
-      id="contact"
-      className="min-h-screen flex items-center justify-center py-20"
-    >
+  return (
+    <section id="contact" className="min-h-screen flex items-center justify-center py-20">
       <RevealOnScroll>
         <div className="px-4 w-full min-w-[300px] md:w-[500px] sm:w-2/3 p-6">
           <h2 className="text-3xl font-bold mb-8 bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent text-center">
@@ -48,7 +58,7 @@ export const Contact = () => {
                 required
                 className="w-full bg-white/5 border border-white/10 rounded px-4 py-3 text-white transition focus:outline-none focus:border-blue-500 focus:bg-blue-500/5"
                 placeholder="Name..."
-                onChange={(e) => setFormData({...formData, name:e.target.value})}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               />
             </div>
 
@@ -61,7 +71,7 @@ export const Contact = () => {
                 required
                 className="w-full bg-white/5 border border-white/10 rounded px-4 py-3 text-white transition focus:outline-none focus:border-blue-500 focus:bg-blue-500/5"
                 placeholder="example@gmail.com"
-                onChange={(e) => setFormData({...formData, email:e.target.value})}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               />
             </div>
 
@@ -74,7 +84,7 @@ export const Contact = () => {
                 rows={5}
                 className="w-full bg-white/5 border border-white/10 rounded px-4 py-3 text-white transition focus:outline-none focus:border-blue-500 focus:bg-blue-500/5"
                 placeholder="Your Message..."
-                onChange={(e) => setFormData({...formData, message:e.target.value})}
+                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
               />
             </div>
 
