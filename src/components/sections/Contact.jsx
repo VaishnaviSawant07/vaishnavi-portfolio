@@ -4,41 +4,36 @@ import emailjs from "emailjs-com";
 
 export const Contact = () => {
   const [formData, setFormData] = useState({
-    name: "",
+    from_name: "",
     email: "",
     message: "",
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-  
+
     console.log("Service ID:", import.meta.env.VITE_SERVICE_ID);
     console.log("Template ID:", import.meta.env.VITE_TEMPLATE_ID);
     console.log("Public Key:", import.meta.env.VITE_PUBLIC_KEY);
-  
-    const formData = {
-      name: e.target.name.value,
-      email: e.target.email.value,
-      message: e.target.message.value,
-    };
-  
+    console.log("Form Data:", formData); // Debugging
+
     emailjs
       .send(
         import.meta.env.VITE_SERVICE_ID,
         import.meta.env.VITE_TEMPLATE_ID,
-        formData, // ✅ Use extracted form data instead of `e.target`
+        formData, // ✅ Using state directly instead of accessing `e.target`
         import.meta.env.VITE_PUBLIC_KEY
       )
       .then(() => {
         alert("Message Sent!");
+        setFormData({ from_name: "", email: "", message: "" }); // ✅ Reset form
       })
       .catch((error) => {
         console.error("EmailJS Error:", error);
         alert("Oops! Something went wrong.");
       });
   };
-  
-  
+
   return (
     <section id="contact" className="min-h-screen flex items-center justify-center py-20">
       <RevealOnScroll>
@@ -51,12 +46,12 @@ export const Contact = () => {
               <input
                 type="text"
                 id="name"
-                name="from_name"
-                value={formData.name}
+                name="from_name" // ✅ Matches EmailJS expected parameter
+                value={formData.from_name}
                 required
                 className="w-full bg-white/5 border border-white/10 rounded px-4 py-3 text-white transition focus:outline-none focus:border-blue-500 focus:bg-blue-500/5"
                 placeholder="Name..."
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                onChange={(e) => setFormData({ ...formData, from_name: e.target.value })}
               />
             </div>
 
