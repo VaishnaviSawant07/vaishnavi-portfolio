@@ -11,29 +11,31 @@ export const Contact = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+  
     console.log("Service ID:", import.meta.env.VITE_SERVICE_ID);
     console.log("Template ID:", import.meta.env.VITE_TEMPLATE_ID);
     console.log("Public Key:", import.meta.env.VITE_PUBLIC_KEY);
-    
-
-    emailjs
-      .send(
-        import.meta.env.VITE_SERVICE_ID,
-        import.meta.env.VITE_TEMPLATE_ID,
-        e.target,  
-        import.meta.env.VITE_PUBLIC_KEY
-      )
-      .then(() => {
-        alert("Message Sent!");
-        setFormData({ name: "", email: "", message: "" });
-      })
-      .catch((error) => {
-        console.error("EmailJS Error:", error);
-        alert("Oops! Something went wrong. Please try again.");
-      });
+  
+    if (!import.meta.env.VITE_SERVICE_ID) {
+      alert("Error: Environment variables are not loaded.");
+      return;
+    }
+  
+    emailjs.send(
+      import.meta.env.VITE_SERVICE_ID,
+      import.meta.env.VITE_TEMPLATE_ID,
+      e.target,
+      import.meta.env.VITE_PUBLIC_KEY
+    )
+    .then(() => {
+      alert("Message Sent!");
+    })
+    .catch((error) => {
+      console.error("EmailJS Error:", error);
+      alert("Oops! Something went wrong.");
+    });
   };
-
+  
   return (
     <section id="contact" className="min-h-screen flex items-center justify-center py-20">
       <RevealOnScroll>
