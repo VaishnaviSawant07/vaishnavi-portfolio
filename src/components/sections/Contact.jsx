@@ -16,25 +16,28 @@ export const Contact = () => {
     console.log("Template ID:", import.meta.env.VITE_TEMPLATE_ID);
     console.log("Public Key:", import.meta.env.VITE_PUBLIC_KEY);
   
-    if (!import.meta.env.VITE_SERVICE_ID) {
-      alert("Error: Environment variables are not loaded.");
-      return;
-    }
+    const formData = {
+      name: e.target.name.value,
+      email: e.target.email.value,
+      message: e.target.message.value,
+    };
   
-    emailjs.send(
-      import.meta.env.VITE_SERVICE_ID,
-      import.meta.env.VITE_TEMPLATE_ID,
-      e.target,
-      import.meta.env.VITE_PUBLIC_KEY
-    )
-    .then(() => {
-      alert("Message Sent!");
-    })
-    .catch((error) => {
-      console.error("EmailJS Error:", error);
-      alert("Oops! Something went wrong.");
-    });
+    emailjs
+      .send(
+        import.meta.env.VITE_SERVICE_ID,
+        import.meta.env.VITE_TEMPLATE_ID,
+        formData, // ✅ Use extracted form data instead of `e.target`
+        import.meta.env.VITE_PUBLIC_KEY
+      )
+      .then(() => {
+        alert("Message Sent!");
+      })
+      .catch((error) => {
+        console.error("EmailJS Error:", error);
+        alert("Oops! Something went wrong.");
+      });
   };
+  
   
   return (
     <section id="contact" className="min-h-screen flex items-center justify-center py-20">
